@@ -1,14 +1,14 @@
 //
-//  HTTPRequestBody.h
+//  HTTPRequest+Body.h
 //  httpSync
 //
-//  Created by Abby Schlageter on 12/04/2014.
+//  Created by Abby Schlageter on 06/05/2014.
 //  Copyright (c) 2014 Abby Schlageter. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "HTTPRequest.h"
 
-@interface HTTPRequestBody : NSObject
+@interface HTTPRequest (Body)
 
 + (NSData *) createBodyWithBoundary:(NSString *)boundary username:(NSString*)username password:(NSString*)password data:(NSData*)data filename:(NSString *)filename;
 

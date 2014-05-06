@@ -12,10 +12,10 @@
 
 +(NSURLSession*)sessionWithDelegate:(id)delegate
 {
-//set up NSURLSession for retrieving data task
-NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
-defaultConfigObject.HTTPMaximumConnectionsPerHost = 1;
-NSURLSession *session = [NSURLSession sessionWithConfiguration:defaultConfigObject delegate:delegate delegateQueue:Nil];
+    //set up NSURLSession for retrieving data task
+    NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
+    defaultConfigObject.HTTPMaximumConnectionsPerHost = 1;
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:defaultConfigObject delegate:delegate delegateQueue:Nil];
     
     return session;
 }

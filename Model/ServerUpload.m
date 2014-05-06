@@ -8,13 +8,13 @@
 
 #import "ServerUpload.h"
 #import "Database.h"
-#import "HTTPRequestBody.h"
+#import "HTTPRequest+Body.h"
 #import "HTTPRequest.h"
 #import "SessionManager.h"
 
 @interface ServerUpload ()
 @property (nonatomic, strong) NSURLSession *uploadSession;
-@property (nonatomic, retain) HTTPRequestBody *httpBody;
+//@property (nonatomic, retain) HTTPRequestBody *httpBody;
 @property (nonatomic, strong) NSURLSessionUploadTask *uploadTask;
 @end
 @implementation ServerUpload
@@ -28,30 +28,19 @@
     //path for database in phone to upload to server
     NSString *targetPath = [Database getPathToDatabaseInDirectory];
     
-    //create request
-   /* NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    [request setHTTPMethod:@"POST"];
 
-    [request addValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];*/
-    
+       //create session and upload task using both delegate for upload progress feedback and completion handler block to report any errors as well as continue with download once completed upload succesfully
 
-    
-    
-    //create session and upload task using both delegate for upload progress feedback and completion handler block to report any errors as well as continue with download once completed upload succesfully
-    /*
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    configuration.HTTPMaximumConnectionsPerHost = 1;
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:Nil];
-    self.uploadSession = session;*/
     self.uploadSession = [SessionManager sessionWithDelegate:self];
     
     NSData *fileData = [NSData dataWithContentsOfFile:targetPath];
     NSString *boundary = @"OUR_BOUNDARY_STRING";
-    NSData *data = [HTTPRequestBody createBodyWithBoundary:boundary username:theUsername password:thePassword data:fileData filename:[targetPath lastPathComponent]];
+    NSData *data = [HTTPRequest createBodyWithBoundary:boundary username:theUsername password:thePassword data:fileData filename:[targetPath lastPathComponent]];
     
+        //create request
     NSMutableURLRequest *request = [HTTPRequest requestWithData:fileData andURL:url andUsername:theUsername andPassword:thePassword andFilename:[targetPath lastPathComponent]];
     
-    //CHANGED THIS FROM SESSIONS TO SELF>UPLOADSESSION
+
     self.uploadTask = [self.uploadSession uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSLog(@"Response:%@ %@\n", response, error);
         if(error == nil)

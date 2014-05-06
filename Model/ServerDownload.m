@@ -7,7 +7,6 @@
 //
 
 #import "ServerDownload.h"
-#import "HTTPRequestBody.h"
 #import <sqlite3.h>
 #import "Database.h"
 #import "Constants.h"
@@ -15,7 +14,7 @@
 #import "SessionManager.h"
 
 @interface ServerDownload ()
-@property (nonatomic, retain) HTTPRequestBody *httpBody;
+
 @property (nonatomic, strong) NSURLSession *downloadSession;
 @property (nonatomic, strong) NSURLSessionDataTask *dataURLTask;
 @property (nonatomic, retain) NSString *downloadURL;
@@ -25,12 +24,6 @@
 
 @implementation ServerDownload
 
-//lazy instantiation
--(HTTPRequestBody*)httpBody{
-    if(!_httpBody){_httpBody = [[HTTPRequestBody alloc] init];}
-    return _httpBody;
-}
-
 -(void)getDownloadURLWithUsername:(NSString*)theUsername andPassword:(NSString*)thePassword andExtension:(NSString*)theExtension
 {
     //url that will give the location (url) of the new database to download
@@ -39,14 +32,10 @@
     NSURL *url = [NSURL URLWithString:urlString];
     
     //create http request
-    
     NSMutableURLRequest *request = [HTTPRequest requestWithData:Nil andURL:url andUsername:theUsername andPassword:thePassword andFilename:Nil];
     
-    /*//set up NSURLSession for retrieving data task
-    NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
-    defaultConfigObject.HTTPMaximumConnectionsPerHost = 1;
-    self.downloadSession = [NSURLSession sessionWithConfiguration:defaultConfigObject delegate:self delegateQueue:Nil];*/
-    self.downloadSession = [SessionManager sessionWithDelegate:self ];
+    //set up NSURLSession for retrieving data task
+    self.downloadSession = [SessionManager sessionWithDelegate:self];
     self.dataURLTask = [self.downloadSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
                         {
                             if(error == nil)
@@ -72,11 +61,6 @@
 {
     //url to download from
     NSURL *url = [NSURL URLWithString:self.downloadURL];
-    
-    //create NSURLSession for download task
-    NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
-    defaultConfigObject.HTTPMaximumConnectionsPerHost = 1;
-    self.downloadSession = [NSURLSession sessionWithConfiguration:defaultConfigObject delegate:self delegateQueue:Nil];
     self.dwnldTask = [self.downloadSession downloadTaskWithURL:url];
     
     [self.dwnldTask resume];
@@ -103,26 +87,6 @@
     else
     {
         NSLog(@"failed to copy database to phone: %@",[err userInfo]);
-    }
-}
-
-//use this to avoid ssl certificate authentication on webfactional
-- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler{
-    
-
-    if ([URL isEqualToString: @"https://shillaker.webfactional.com"]) {
-        NSLog(@"AUTHENTICATION CHALLENGE");
-        if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]){
-            if([challenge.protectionSpace.host isEqualToString:@"shillaker.webfactional.com"]){
-                NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-                completionHandler(NSURLSessionAuthChallengeUseCredential,credential);
-            }
-        }
-    }
-    else
-    {
-        //this means the session will carry on as normal, i.e without mucking about with the authentication challenge
-        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
     }
 }
 

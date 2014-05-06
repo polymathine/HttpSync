@@ -14,7 +14,7 @@
 @property (nonatomic) sqlite3 *mainDB;
 
 +(Database*)sharedInstance;
--(sqlite3*)retrieveDatabase;
 +(NSString*)getPathToDatabaseInDirectory;
+-(sqlite3*)retrieveDatabase;
 
 @end
