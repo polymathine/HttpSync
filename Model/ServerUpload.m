@@ -14,9 +14,9 @@
 
 @interface ServerUpload ()
 @property (nonatomic, strong) NSURLSession *uploadSession;
-//@property (nonatomic, retain) HTTPRequestBody *httpBody;
 @property (nonatomic, strong) NSURLSessionUploadTask *uploadTask;
 @end
+
 @implementation ServerUpload
 
 -(void)uploadDatabaseWithUsername:(NSString*)theUsername andPassword:(NSString*)thePassword
@@ -27,10 +27,8 @@
     
     //path for database in phone to upload to server
     NSString *targetPath = [Database getPathToDatabaseInDirectory];
-    
 
-       //create session and upload task using both delegate for upload progress feedback and completion handler block to report any errors as well as continue with download once completed upload succesfully
-
+    //create session and upload task using both delegate for upload progress feedback and completion handler block to report any errors
     self.uploadSession = [SessionManager sessionWithDelegate:self];
     
     NSData *fileData = [NSData dataWithContentsOfFile:targetPath];
@@ -73,12 +71,10 @@
 {
     NSLog(@"Sent: %lld bytes (Uploaded: %lld bytes)  Expected: %lld bytes.\n",
           bytesSent, totalBytesSent, totalBytesExpectedToSend);
-    
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
-
 
 }
 
