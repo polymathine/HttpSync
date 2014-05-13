@@ -40,11 +40,7 @@
                         {
                             if(error == nil)
                             {
-                                //add retrieved download location info to the basicURL
-                                NSString *text = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-                                self.downloadURL = [NSString stringWithFormat:@"%@%@", basicURL, text];
-                                NSLog(@"download URL:%@", self.downloadURL);
-                                //download database from url
+                                [self updateDownloadUrl:basicURL with:data];
                                 [self downloadDatabaseFromUrl];
                             }
                             else
@@ -55,6 +51,14 @@
                         }];
     [self.dataURLTask resume];
     
+}
+
+- (void)updateDownloadUrl:(NSString *)basicURL with:(NSData *)data
+{
+    //add retrieved download location info to the basicURL
+    NSString *text = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+    self.downloadURL = [NSString stringWithFormat:@"%@%@", basicURL, text];
+    NSLog(@"download URL:%@", self.downloadURL);
 }
 
 -(void)downloadDatabaseFromUrl
