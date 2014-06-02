@@ -21,9 +21,8 @@
 
 -(void)uploadDatabaseWithUsername:(NSString*)theUsername andPassword:(NSString*)thePassword
 {
-    NSString *urlString = [NSString stringWithFormat:@"%@%@", URL, UPLOAD];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSLog(@"upload URL = %@", urlString);
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", URL, UPLOAD]];
+    NSLog(@"upload URL = %@", url);
     
     //path for database in phone to upload to server
     NSString *targetPath = [Database getPathToDatabaseInDirectory];

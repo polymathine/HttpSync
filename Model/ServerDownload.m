@@ -27,12 +27,18 @@
 -(void)getDownloadURLWithUsername:(NSString*)theUsername andPassword:(NSString*)thePassword andExtension:(NSString*)theExtension
 {
     //url that will give the location (url) of the new database to download
-    NSString *basicURL = [NSString stringWithFormat:@"%@", URL];
     NSString *urlString = [NSString stringWithFormat:@"%@%@", URL, theExtension];
     NSURL *url = [NSURL URLWithString:urlString];
     
     //create http request
     NSMutableURLRequest *request = [HTTPRequest requestWithData:Nil andURL:url andUsername:theUsername andPassword:thePassword andFilename:Nil];
+    
+    [self startDownloadWithRequest:request];
+}
+
+-(void)startDownloadWithRequest:(NSMutableURLRequest*)request
+{
+    NSString *basicURL = [NSString stringWithFormat:@"%@", URL];
     
     //set up NSURLSession for retrieving data task
     self.downloadSession = [SessionManager sessionWithDelegate:self];
@@ -50,7 +56,6 @@
                             }
                         }];
     [self.dataURLTask resume];
-    
 }
 
 - (void)updateDownloadUrl:(NSString *)basicURL with:(NSData *)data
