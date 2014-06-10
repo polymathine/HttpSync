@@ -24,16 +24,17 @@
 
 @implementation ServerDownload
 
--(void)getDownloadURLWithUsername:(NSString*)theUsername andPassword:(NSString*)thePassword andExtension:(NSString*)theExtension
++(void)setUpDownloadURLRequestWithUsername:(NSString*)username andPassword:(NSString*)password andExtension:(NSString*)extension
 {
     //url that will give the location (url) of the new database to download
-    NSString *urlString = [NSString stringWithFormat:@"%@%@", URL, theExtension];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@", URL, extension];
     NSURL *url = [NSURL URLWithString:urlString];
     
     //create http request
-    NSMutableURLRequest *request = [HTTPRequest requestWithData:Nil andURL:url andUsername:theUsername andPassword:thePassword andFilename:Nil];
+    NSMutableURLRequest *request = [HTTPRequest requestWithData:Nil andURL:url andUsername:username andPassword:password andFilename:Nil];
     
-    [self startDownloadWithRequest:request];
+    
+    [[[self alloc] init] startDownloadWithRequest:request];
 }
 
 -(void)startDownloadWithRequest:(NSMutableURLRequest*)request

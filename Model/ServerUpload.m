@@ -18,7 +18,6 @@
 @end
 
 @implementation ServerUpload
-
 -(void)uploadDatabaseWithUsername:(NSString*)theUsername andPassword:(NSString*)thePassword
 {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", URL, UPLOAD]];
@@ -26,10 +25,6 @@
     
     //path for database in phone to upload to server
     NSString *targetPath = [Database getPathToDatabaseInDirectory];
-
-    //create session and upload task using both delegate for upload progress feedback and completion handler block to report any errors
-    self.uploadSession = [SessionManager sessionWithDelegate:self];
-    
     NSData *fileData = [NSData dataWithContentsOfFile:targetPath];
     NSString *boundary = @"OUR_BOUNDARY_STRING";
     NSData *data = [HTTPRequest createBodyWithBoundary:boundary username:theUsername password:thePassword data:fileData filename:[targetPath lastPathComponent]];
@@ -37,7 +32,15 @@
         //create request
     NSMutableURLRequest *request = [HTTPRequest requestWithData:fileData andURL:url andUsername:theUsername andPassword:thePassword andFilename:[targetPath lastPathComponent]];
     
+    [self doUploadWithRequest:request andData:data];
+}
 
+
+-(void)doUploadWithRequest:(NSMutableURLRequest*)request andData:(NSData*)data
+{
+    //create session and upload task using both delegate for upload progress feedback and completion handler block to report any errors
+    self.uploadSession = [SessionManager sessionWithDelegate:self];
+    
     self.uploadTask = [self.uploadSession uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSLog(@"Response:%@ %@\n", response, error);
         if(error == nil)
@@ -53,17 +56,16 @@
             {
                 NSLog(@"there was a problem with the upload data going into the server");
             }
-            
         }
         else{
             NSLog(@"error connecting to server");
         }
-        
     }];
-    //NSAssert(!error, @"%s: uploadTaskWithRequest error: %@", __FUNCTION__, error);
-
     [self.uploadTask resume];
 }
+
+    
+
 
 //task/upload delegate methods
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend

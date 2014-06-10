@@ -34,12 +34,12 @@
 
 -(IBAction)downloadClean:(id)sender
 {
-    [self.syncsDownload getDownloadURLWithUsername:USERNAME andPassword:PASSWORD andExtension:EXTENSION_CLEAN];
+    [ServerDownload setUpDownloadURLRequestWithUsername:USERNAME andPassword:PASSWORD andExtension:EXTENSION_CLEAN];
 }
 
 -(IBAction)download:(id)sender
 {
-    [self.syncsDownload getDownloadURLWithUsername:USERNAME andPassword:PASSWORD andExtension:EXTENSION];
+    [ServerDownload setUpDownloadURLRequestWithUsername:USERNAME andPassword:PASSWORD andExtension:EXTENSION];
 }
 
 -(IBAction)upload:(id)sender

@@ -10,6 +10,7 @@
 
 @interface ServerDownload : NSObject <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
--(void)getDownloadURLWithUsername:(NSString*)theUsername andPassword:(NSString*)thePassword andExtension:(NSString*)theExtension;
++(void)setUpDownloadURLRequestWithUsername:(NSString*)username andPassword:(NSString*)password andExtension:(NSString*)extension;
+
 
 @end
